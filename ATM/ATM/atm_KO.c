@@ -30,7 +30,7 @@ void cashWithdrawl(void){
     
     //handle improper values for withdrawl such as negative val, not multiples of 20, not enough balance, going past daily limit
     //runs until the user enters a valid amount
-    while(!(withdraw > 0 && withdraw + netWithdrawl < 1000 && withdraw % 20 == 0 && withdraw < bal)){
+    while(!(withdraw > 0 && withdraw + netWithdrawl <= 1000 && withdraw % 20 == 0 && withdraw < bal)){
        //handle negative & 0 amounts
         if(withdraw <= 0 && attempts <= 2){
             while(withdraw <= 0 && attempts <= 2){
@@ -47,7 +47,7 @@ void cashWithdrawl(void){
         }
         
         //if user tries to withdraw more than $1000 a day
-        if(withdraw + netWithdrawl > 1000){
+        if(withdraw + netWithdrawl >= 1000){
             puts("Error, daily withdrawl limit is $1000. Please try again.");
             scanf("%d", &withdraw);
         }
@@ -89,7 +89,7 @@ void cashDeposit(void){
     attempts++;
     
     //check that amount entered is positive and total deposited is not past limit
-    while (!(deposit + netDep < 10000 && deposit > 0)) {
+    while (!(deposit + netDep <= 10000) && deposit > 0) {
         //prompts to re-enter amount if user enters a negative value or 0
         if(deposit <= 0 && attempts <= 2){
             while(deposit <= 0 && attempts <= 2){
@@ -105,9 +105,11 @@ void cashDeposit(void){
             exit(1);
         }
         //check to see if total deposited is not past limit
-        if(deposit + netDep> 10000){
-            puts("Error, daily deposit limit is $10,000. Please try again.");
+        if(deposit + netDep>= 10000){
+            puts("Error, daily deposit limit is $10,000.");
             scanf("%d", &deposit);
+            
+            
         }
        
     }
@@ -173,12 +175,20 @@ int main(int argc, const char * argv[]) {
         while(choice != 4){
             if(choice == 1){
                 balance();
-            } else if(choice == 2){
+            } else if(choice == 2 && netDep != 10000){
                 cashDeposit();
                 transactions++;
-            } else if(choice == 3){
+            } else if(choice == 3 && netWithdrawl != 1000){
                 cashWithdrawl();
                 transactions++;
+            } else if(netDep == 10000 && choice == 2) {
+                puts("You are at daily deposit limit. Please select another option:");
+                scanf("%d", &choice);
+                continue;
+            } else if(netWithdrawl == 1000 && choice == 3) {
+                puts("You are at daily withdrawl limit. Please select another option:");
+                scanf("%d", &choice);
+                continue;
             } else {
                 puts("Error, not an option. Please try again:");
                 scanf("%d", &choice);
