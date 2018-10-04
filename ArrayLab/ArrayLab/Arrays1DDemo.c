@@ -12,8 +12,8 @@
 #include <time.h>
 
 //create global variables to store array and its size
-static int array[];
-static int size = 0;
+int array[];
+int size = 0;
 
 //populate array with random ints
 void fillArray(void) {
